@@ -7,5 +7,6 @@ pink
 teal
 blue
 green
+red
 think of commit as a save
 -change a file nd make a commit
