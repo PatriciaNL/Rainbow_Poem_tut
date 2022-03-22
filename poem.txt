@@ -13,3 +13,4 @@ think of commit as a save
 commit hash is the unique identifier for each single commit done
 a branch is baisicaly a file that is created an a posible alternative rout for the master project- this branch can also be edited and commits can also be implimented aling this branch 
 new unicorn branch
+horse, pony, saddle
