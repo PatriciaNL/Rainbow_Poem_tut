@@ -1,0 +1,8 @@
+green
+yelllow
+borwn
+black
+blue
+green
+think of commit as a save
+-change a file nd make a commit
