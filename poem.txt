@@ -10,3 +10,4 @@ green
 red
 think of commit as a save
 -change a file nd make a commit
+commit hash is the unique identifier for each single commit done
