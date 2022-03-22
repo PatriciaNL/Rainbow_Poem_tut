@@ -4,6 +4,9 @@ borwn
 black
 purple
 pink
+gray
+indigo
+sea green
 teal
 blue
 green
