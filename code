@@ -1,0 +1,560 @@
+print(f1.head())
+print(f1['responsetime'].mean())
+print(f2.head())
+print(f2['responsetime'].mean())
+print(f3.head())
+print(f3['responsetime'].mean())
+
+#SD for condtion 1
+elements1 = (f1['responsetime'])
+print (elements1)
+mean1 = np.mean(elements1, axis = 0)
+sd1= np.std(elements1, axis = 0)
+final_list = [x for x in (f1['responsetime']) if (x> mean1 - 2.0 * sd1)]
+final_list = [x for x in final_list if (x < mean1 +2.0 * sd1)]
+print (final_list)
+
+#SD for F2
+elements2 = (f2['responsetime'])
+print (elements2)
+mean2 = np.mean(elements2, axis = 0)
+sd2= np.std(elements2, axis = 0)
+fl2 = [x for x in (f2['responsetime']) if (x> mean2 - 2.0 * sd2)]
+fl2 = [x for x in fl2 if (x < mean2 + 2.0 * sd2)]
+print (fl2)
+
+#SD for F3
+elements3 = (f3['responsetime'])
+print (elements3)
+mean3 = np.mean(elements3, axis = 0)
+sd3= np.std(elements3, axis = 0)
+fl3 = [x for x in (f3['responsetime']) if (x> mean3 - 2.0 * sd3)]
+fl3 = [x for x in fl3 if (x < mean3 +2.0 * sd3)]
+print (fl3)
+
+#histogram for f1- SD implimented
+c1_1= (final_list)
+plt.hist(c1_1, bins=20)
+plt.title('Clean Condition-No Morph')
+plt.xlabel('RT in (ms)')
+plt.ylabel('Counts')
+plt.show()
+
+
+#histogram for f2-SD implimented
+c2_2= (fl2)
+plt.hist(c2_2)
+plt.title('Feedback Condition-Morph')
+plt.xlabel('RT in (ms)')
+plt.ylabel('Counts')
+plt.show()
+
+
+#histogram for f3- SD implimented
+c3_2=(fl3)
+plt.hist(c3_2)
+plt.title('No Feedback Condition-Morph')
+plt.xlabel('RT in (ms)')
+plt.ylabel('Counts')
+plt.show()
+
+##extract a column and convert it to numpy array
+## all responsetimes for all 3 blocks
+rt_clean = np.array(f1['responsetime'])
+rt_feedback = np.array(f2['responsetime'])
+rt_nofeedback = np.array(f3['responsetime'])
+
+##all conditions presented during all 3 blocks
+##present conditions: 0,20,21,41
+c_clean=np.array(f1['condition'])
+##present conditions:8 9 10 11 12 13 14 15 16 17 29 30 31 32 33 34 35 36 37 38
+c_feedback=np.array(f2['condition'])
+##present conditions: 8 9 10 11 12 13 14 15 16 17 29 30 31 32 33 34 35 36 37 38
+c_nofeedback=np.array(f3['condition'])
+
+##find congruent vs incongruent RT
+congruent_ind = (f1['condition'] == 20) | (f1['condition'] == 41)
+np.count_nonzero(congruent_ind)
+cong = (f1['responsetime'])[congruent_ind]
+incong = (f1['responsetime'])[~congruent_ind]
+
+print (((f1['responsetime'])[congruent_ind]).mean())
+print (((f1['responsetime'])[~congruent_ind]).mean())
+
+#VIOLIN PLOT #1 CONGRUENT VS INCONGRUENT RT
+plt.title('Congruent vs. Incongruent RT Clean')
+plt.xlabel('RT difference in ms') ##look into this to verify
+plt.ylabel('RT in ms')
+plt.violinplot((f1['responsetime'])[congruent_ind])
+plt.violinplot((f1['responsetime'])[~congruent_ind])
+
+plt.gca().legend(('congruent','incongruent'))
+plt.show()
+
+##Violin plot #2 of all 3 conditions RT
+data1= list((f1['responsetime'],f2['responsetime'],f3['responsetime']))
+
+elements2 = (f2['responsetime'])
+fig, ax = plt.subplots()
+ax.set_title('RT under all 3 conditions')
+ax.set_ylabel('RT in ms')
+ax.violinplot(data1, showmeans=True, showmedians=False)
+xticklabels = ['Clean', 'Feedback', 'No Feedback']
+ax.set_xticks([1,2,3])
+ax.set_xticklabels(xticklabels)
+#ax.yaxisgrid(True)
+fig.show()
+
+##Violin plot #3 of Con-Ingon for C1
+data2= list((cong, incong))
+fig, ax = plt.subplots()
+ax.set_title=('Rt in Clean Condition')
+ax.set_ylabel('RT in ms')
+ax.violinplot(data2, showmeans=True, showmedians=False)
+xticklabels = ['Congruent','Incongruent']
+ax.set_xticks([1,2])
+ax.set_xticklabels(xticklabels)
+#ax.yaxisgrid(True)
+fig.show
+
+##10 CONDITIONS MEAN ANALYSIS
+#8&29, 9&30, 10&31, 11&32 ect are degree-slanted equivalent
+#8   9 10 11 12 13 14 15 16 17 
+#29 30 31 32 33 34 35 36 37 38
+#mean for all 10 conditions and their paired slanted equivalent letter
+
+#f2 cong/incong index
+cc2_ind = (f2['condition'] == 8) | (f2['condition'] == 10)| (f2['condition'] == 12)| (f2['condition']==14)| (f2['condition']==16) | (f2['condition']==29) | (f2['condition']== 31) | (f2 ['condition']== 33) | (f2['condition']==35) | (f2['condition']== 37)
+print(cc2_ind)
+cong2 = (f2['responsetime']) [cc2_ind]
+incong2 = (f2 ['responsetime'])[~cc2_ind]
+
+#Violin plot for F2 Cong .vs incong. RT
+dataf2= list((cong2, incong2))
+fig, ax = plt.subplots()
+
+print (elements2)
+mean2 = np.mean(elements2, axis = 0)
+sd2= np.std(elements2, axis = 0)
+fl2 = [x for x in (f2['responsetime']) if (x> mean2 - 2.0 * sd2)]
+fl2 = [x for x in fl2 if (x < mean2 + 2.0 * sd2)]
+print (fl2)
+
+ax.set_title('Rt Feedback condition: Congruent vs Incongruent ')
+ax.set_ylabel('RT in ms')
+ax.violinplot(dataf2, showmeans=True, showmedians=False)
+xticklabels = ['Congruent','Incongruent']
+ax.set_xticks([1,2])
+ax.set_xticklabels(xticklabels)
+#ax.yaxisgrid(True)
+fig.show()
+
+
+#f3 cong/incong index
+cc3_ind = (f3['condition'] == 8) | (f3['condition'] == 10)| (f3['condition'] == 12)| (f3['condition']==14)| (f3['condition']==16) | (f3['condition']==29) | (f3['condition']== 31) | (f3 ['condition']== 33) | (f3['condition']==35) | (f3['condition']== 37)
+print(cc3_ind)
+cong3 = (f3['responsetime']) [cc3_ind]
+incong3 = (f2 ['responsetime'])[~cc3_ind]
+
+dataf3= list((cong3, incong3))
+fig, ax = plt.subplots()
+ax.set_title('Rt No Feedback condition: Congruent vs Incongruent ')
+ax.set_ylabel('RT in ms')
+ax.violinplot(dataf3, showmeans=True, showmedians=False)
+xticklabels = ['Congruent','Incongruent']
+ax.set_xticks([1,2])
+ax.set_xticklabels(xticklabels)
+fig.show()
+
+
+
+
+
+
+#adjust stimuli-make images smaller. to get a stronger effect- 57cm or inches away froms screeen,measure and control distance-affects visual angle, make stim images smaller on psychopy. 57cm away for part. 
+#slower visual processing and does the automatic motor responses go away? 
+#  8 sets, 2 sessions per subject- keep cond, the same for both sessions
+
+
+##correct/ incorrect index for f2
+#####correct_ind= (f2['correctresponse']== 1) | (f2['correctresponse']==0)
+#####print(correct_ind)
+#correct=
+#incorrect= 
+
+morph_type=(f3['condition'])
+#condtions: 8 9 10 11 12 13 14 16 17 29 30 31 32 33 34 35 36 37 38
+#total of 10 conditions  
+#conditions to compare: (8 29)(9 30)(10 31)(11 32)(12 33)(13 34)(14 35)(15 36)(16 37)(17 38) 
+# %% (8 29)
+stage1 =(f3['condition'] == 8)
+#what response was selected in conditions 8  
+index1=(f3['response'])[stage1]
+#what correct response actually was under these trials 
+index2=(f3['correctresponse'])[stage1]
+correct= (index1 == index2)
+## if response was incorrect, false will signal this
+incorrect= ~(index1 == index2)
+#sums all errors found within each trial
+error=(sum(incorrect))
+trialmean1= np.mean(error)
+denom1=np.count_nonzero(stage1)
+proportion1_1=(trialmean1/denom1)
+print(proportion1_1)
+correct1_1= index1 == index2
+rate1_1= (sum((correct))/(denom1))
+print(rate1_1)
+aselect=(sum(index1)/(denom1))
+print(aselect)
+
+
+stage1_1 =(f3['condition'] == 29)
+index1_3=(f3['response'])[stage1_1]
+index1_4=(f3['correctresponse'])[stage1_1]
+incorrect1_1= ~(index1_3 == index1_4)
+error1_1=(sum(incorrect1_1))
+trialmean1_1= np.mean(error1_1)
+denom1_1=np.count_nonzero(stage1_1)
+proportion1_2=(trialmean1_1/denom1_1)
+print(proportion1_2)
+correct1_2= index1_3 == index1_4
+rate1_2= (sum((correct1_2))/(denom1_1))
+print(rate1_2)
+aselect1_1=(sum(index1_3)/(denom1_1))
+print(aselect1_1)
+# %%
+################CONDITIONS 9 AND 30
+stage2_1 =(f3['condition'] == 9)
+index2_5=(f3['response'])[stage2_1]
+index2_6=(f3['correctresponse'])[stage2_1]
+incorrect2_1= ~(index2_5 == index2_6)
+error2_1=(sum(incorrect2_1))
+trialmean2_1= np.mean(error2_1)
+denom2_1=np.count_nonzero(stage2_1)
+proportion2_1=(trialmean2_1/denom2_1)
+print(proportion2_1)
+correct2_1= index2_5 == index2_6
+rate2_1= (sum((correct2_1))/(denom2_1))
+print(rate2_1)
+aselect2_1=(sum(index2_5)/denom2_1)
+print(aselect2_1)
+
+stage2_2 =(f3['condition'] == 30)
+index2_1=(f3['response'])[stage2_2]
+index2_2=(f3['correctresponse'])[stage2_2]
+incorrect2_2= ~(index2_1 == index2_2)
+error2_2=(sum(incorrect2_2))
+trialmean2_2= np.mean(error2_2)
+denom2_2=np.count_nonzero(stage2_2)
+proportion2_2=(trialmean2_2/denom2_2)
+print(proportion2_2)
+correct2_2= index2_1 == index2_2
+rate2_2= (sum((correct2_2))/(denom2_2))
+print(rate2_2)
+aselect2_2=(sum(index2_1)/(denom2_2))
+print(aselect2_2)
+# %% 
+#10 and 31
+stage3_1 =(f3['condition'] == 10)
+index3_1=(f3['response'])[stage3_1]
+index3_2=(f3['correctresponse'])[stage3_1]
+incorrect3_1= ~(index3_1 == index3_2)
+error3_1=(sum(incorrect3_1))
+trialmean3_1= np.mean(error3_1)
+denom3_1=np.count_nonzero(stage3_1)
+proportion3_1=(trialmean3_1/denom3_1)
+print(proportion3_1)
+correct3_1= index3_1 == index3_2
+rate3_1= (sum((correct3_1))/(denom3_1))
+print(rate3_1)
+aselect3_1=(sum(index3_1)/(denom3_1))
+print(aselect3_1)
+
+stage3_2 =(f3['condition'] == 31)
+index3_3=(f3['response'])[stage3_2]
+index3_4=(f3['correctresponse'])[stage3_2]
+incorrect3_2= ~(index3_3 == index3_4)
+error3_2=(sum(incorrect3_2))
+trialmean3_2= np.mean(error3_2)
+denom3_2=np.count_nonzero(stage3_2)
+proportion3_2=(trialmean3_2/denom3_2)
+print(proportion3_2)
+correct3_2= index3_3 == index3_4
+rate3_2= (sum((correct3_2))/(denom3_2))
+print(rate3_2)
+aselect3_2=sum(index3_3)
+print(aselect3_2)
+
+# %%
+# (11 32)
+stage4_1 =(f3['condition'] == 11)
+index4_1=(f3['response'])[stage4_1]
+index4_2=(f3['correctresponse'])[stage4_1]
+incorrect4_1= ~(index4_1 == index4_2)
+error4_1=(sum(incorrect4_1))
+trialmean4_1= np.mean(error4_1)
+denom4_1=np.count_nonzero(stage4_1)
+proportion4_1=(trialmean4_1/denom4_1)
+print(proportion4_1)
+correct4_1= index4_1 == index4_2
+rate4_1= (sum((correct4_1))/(denom4_1))
+print(rate4_1)
+aselect4_1=(sum(index4_1)/(denom4_1))
+print(aselect4_1)
+
+stage4_2 =(f3['condition'] == 32)
+index4_3=(f3['response'])[stage4_2]
+index4_4=(f3['correctresponse'])[stage4_2]
+incorrect4_2= ~(index4_3 == index4_4)
+error4_2=(sum(incorrect4_2))
+trialmean4_2= np.mean(error4_2)
+denom4_2=np.count_nonzero(stage4_2)
+proportion4_2=(trialmean4_2/denom4_2)
+print(proportion4_2)
+correct4_2= index4_3 == index4_4
+rate4_2= (sum((correct4_2))/(denom4_2))
+print(rate4_2)
+aselect4_2=(sum(index4_3)/(denom4_2))
+print(aselect4_2)
+# %%
+#(12 33)
+stage5_1 =(f3['condition'] == 12)
+index5_1=(f3['response'])[stage5_1]
+index5_2=(f3['correctresponse'])[stage5_1]
+incorrect5_1= ~(index5_1 == index5_2)
+error5_1=(sum(incorrect5_1))
+trialmean5_1= np.mean(error5_1)
+denom5_1=np.count_nonzero(stage5_1)
+proportion5_1=(trialmean5_1/denom5_1)
+print(proportion5_1)
+correct5_1= index5_1 == index5_2
+rate5_1= (sum((correct5_1))/(denom5_1))
+print(rate5_1)
+aselect5_1=sum((index5_1)/(denom5_1))
+print(aselect5_1)
+
+stage5_2 =(f3['condition'] == 33)
+index5_3=(f3['response'])[stage5_2]
+index5_4=(f3['correctresponse'])[stage5_2]
+incorrect5_2= ~(index5_3 == index5_4)
+error5_2=(sum(incorrect5_2))
+trialmean5_2= np.mean(error5_2)
+denom5_2=np.count_nonzero(stage5_2)
+proportion5_2=(trialmean5_2/denom5_2)
+print(proportion5_2)
+correct5_2= index5_3 == index5_4
+rate5_2= (sum((correct5_2))/(denom5_2))
+print(rate5_2)
+aselect5_2=(sum(index5_3)/(denom5_2))
+print(aselect5_2)
+# %%
+#(13 34)
+stage6_1 =(f3['condition'] == 13)
+index6_1=(f3['response'])[stage6_1]
+index6_2=(f3['correctresponse'])[stage6_1]
+incorrect6_1= ~(index6_1 == index6_2)
+error6_1=(sum(incorrect6_1))
+trialmean6_1= np.mean(error6_1)
+denom6_1=np.count_nonzero(stage6_1)
+proportion6_1=(trialmean6_1/denom6_1)
+print(proportion6_1)
+correct6_1= index6_1 == index6_2
+rate6_1= (sum((correct6_1))/(denom6_1))
+print(rate6_1)
+aselect6_1=(sum(index6_1)/(denom6_1))
+print(aselect6_1)
+
+stage6_2 =(f3['condition'] == 34)
+index6_3=(f3['response'])[stage6_2]
+index6_4=(f3['correctresponse'])[stage6_2]
+incorrect6_2= ~(index6_3 == index6_4)
+error6_2=(sum(incorrect6_2))
+trialmean6_2= np.mean(error6_2)
+denom6_2=np.count_nonzero(stage6_2)
+proportion6_2=(trialmean6_2/denom6_2)
+print(proportion6_2)
+correct6_2= index6_3 == index6_4
+rate6_2= (sum((correct6_2))/(denom6_2))
+print(rate6_2)
+aselect6_2=(sum(index6_3)/(denom6_2))
+print(aselect6_2)
+# %%
+#(14 35)
+stage7_1 =(f3['condition'] == 14)
+index7_1=(f3['response'])[stage7_1]
+index7_2=(f3['correctresponse'])[stage7_1]
+incorrect7_1= ~(index7_1 == index7_2)
+error7_1=(sum(incorrect7_1))
+trialmean7_1= np.mean(error7_1)
+denom7_1=np.count_nonzero(stage7_1)
+proportion7_1=(trialmean7_1/denom7_1)
+print(proportion7_1)
+correct7_1= index7_1 == index7_2
+rate7_1= (sum((correct7_1))/(denom7_1))
+print(rate7_1)
+aselect7_1=(sum(index7_1)/(denom7_1))
+print(aselect7_1)
+
+stage7_2 =(f3['condition'] == 35)
+index7_3=(f3['response'])[stage7_2]
+index7_4=(f3['correctresponse'])[stage7_2]
+incorrect7_2= ~(index7_3 == index7_4)
+error7_2=(sum(incorrect7_2))
+trialmean7_2= np.mean(error7_2)
+denom7_2=np.count_nonzero(stage7_2)
+proportion7_2=(trialmean7_2/denom7_2)
+print(proportion7_2)
+correct7_2= index7_3 == index7_4
+rate7_2= (sum((correct7_2))/(denom7_2))
+print(rate7_2)
+aselect7_2=(sum(index7_3)/(denom7_2))
+print(aselect7_2)
+# %%
+#(15 36)
+stage8_1 =(f3['condition'] == 15)
+index8_1=(f3['response'])[stage8_1]
+index8_2=(f3['correctresponse'])[stage8_1]
+incorrect8_1= ~(index8_1 == index8_2)
+error8_1=(sum(incorrect8_1))
+trialmean8_1= np.mean(error8_1)
+denom8_1=np.count_nonzero(stage8_1)
+proportion8_1=(trialmean8_1/denom8_1)
+print(proportion8_1)
+correct8_1= index8_1 == index8_2
+rate8_1= (sum((correct8_1))/(denom8_1))
+print(rate8_1)
+aselect8_1=(sum(index8_1)/(denom8_1))
+print(aselect8_1)
+
+stage8_2 =(f3['condition'] == 36)
+index8_3=(f3['response'])[stage8_2]
+index8_4=(f3['correctresponse'])[stage8_2]
+incorrect8_2= ~(index8_3 == index8_4)
+error8_2=(sum(incorrect8_2))
+trialmean8_2= np.mean(error8_2)
+denom8_2=np.count_nonzero(stage8_2)
+proportion8_2=(trialmean8_2/denom8_2)
+print(proportion8_2)
+correct8_2= index8_3 == index8_4
+rate8_2= (sum((correct8_2))/(denom8_2))
+print(rate8_2)
+aselect8_2=(sum(index8_3)/(denom8_2))
+print(aselect8_2)
+# %%
+#(16 37)
+stage9_1 =(f3['condition'] == 16)
+index9_1=(f3['response'])[stage9_1]
+index9_2=(f3['correctresponse'])[stage9_1]
+incorrect9_1= ~(index9_1 == index9_2)
+error9_1=(sum(incorrect9_1))
+trialmean9_1= np.mean(error9_1)
+denom9_1=np.count_nonzero(stage9_1)
+proportion9_1=(trialmean9_1/denom9_1)
+print(proportion9_1)
+correct9_1= index9_1 == index9_2
+rate9_1= (sum((correct9_1))/(denom9_1))
+print(rate9_1)
+aselect9_1=(sum(index9_1)/(denom9_1))
+print(aselect9_1)
+
+stage9_2 =(f3['condition'] == 37)
+index9_3=(f3['response'])[stage9_2]
+index9_4=(f3['correctresponse'])[stage9_2]
+incorrect9_2= ~(index9_3 == index9_4)
+error9_2=(sum(incorrect9_2))
+trialmean9_2= np.mean(error9_2)
+denom9_2=np.count_nonzero(stage9_2)
+proportion9_2=(trialmean9_2/denom9_2)
+print(proportion9_2)
+correct9_2= index9_3 == index9_4
+rate9_2= (sum((correct9_2))/(denom9_2))
+print(rate9_2)
+aselect9_2=(sum(index9_3)/(denom9_2))
+print(aselect9_2)
+# %%
+#(17 38) 
+stage10_1 =(f3['condition'] == 17)
+index10_1=(f3['response'])[stage10_1]
+index10_2=(f3['correctresponse'])[stage10_1]
+incorrect10_1= ~(index10_1 == index10_2)
+error10_1=(sum(incorrect10_1))
+trialmean10_1= np.mean(error10_1)
+denom10_1=np.count_nonzero(stage10_1)
+proportion10_1=(trialmean10_1/denom10_1)
+print(proportion10_1)
+correct10_1= index10_1 == index10_2
+rate10_1= (sum((correct10_1))/(denom10_1))
+print(rate10_1)
+aselect10_1=(sum(index10_1)/(denom10_1))
+print(index10_1)
+
+stage10_2 =(f3['condition'] == 38)
+index10_3=(f3['response'])[stage10_2]
+index10_4=(f3['correctresponse'])[stage10_2]
+incorrect10_2= ~(index10_3 == index10_4)
+error10_2=(sum(incorrect10_2))
+trialmean10_2= np.mean(error10_2)
+denom10_2=np.count_nonzero(stage10_2)
+proportion10_2=(trialmean10_2/denom10_2)
+print(proportion10_2)
+correct10_2= index10_3 == index10_4
+rate10_2= (sum((correct10_2))/(denom10_2))
+print(rate10_2)
+aselect10_2=(sum(index10_3)/(denom10_2))
+print(aselect10_2)
+# %%
+# Actual plotting of the figures
+conditionx_1= [proportion1_1, proportion2_1, proportion3_1, proportion4_1, proportion5_1, proportion6_1 ,proportion7_1, proportion8_1, proportion9_1, proportion10_1]
+conditionx_2= [proportion1_2, proportion2_2, proportion3_2, proportion4_2, proportion5_2, proportion6_2 ,proportion7_2, proportion8_2, proportion9_2, proportion10_2]
+print(conditionx_1)
+print(conditionx_2)
+ #%%
+
+errorfrequency= [0.1, 0.2, 0.3,0.4, 0.5,0.6, 0.7, 0.8, 0.9,1.0]
+plt.plot(errorfrequency, conditionx_1, marker='o', label = "H surround")
+plt.plot(errorfrequency, conditionx_2, marker='o' , label = "A surround")
+plt.ylim(0.0,1.1)
+plt.xlim(0,1.0)
+plt.xlabel('Morph Condition from H to A')
+plt.ylabel('Response Selction Error')
+plt.title('Response Selection Error Rate')
+plt.legend()
+plt.show()
+# %% Plot for A selction proportionality
+
+
+stage10_2 =(f3['condition'] == 38)
+index10_3=(f3['response'])[stage10_2]
+index10_4=(f3['correctresponse'])[stage10_2]
+incorrect10_2= ~(index10_3 == index10_4)
+correct10_2= index10_3 == index10_4
+rate= (sum((correct10_2))/(denom10_2))
+print(rate)
+error10_2=(sum(incorrect10_2))
+trialmean10_2= np.mean(error10_2)
+denom10_2=np.count_nonzero(stage10_2)
+proportion10_2=(trialmean10_2/denom10_2)
+print(proportion10_2)
+
+
+
+#%% to find proportion ,compare response se;lection with correct response condition for trial 40
+# first 21 are with H as backround 
+# next 21 are with A as background
+#morph from H to A and Rouders graph is from an A target to an H so I flipped the order sequence: ie: cond 10, 9, 8...1 
+
+hsurround=aselect10_1, aselect9_1, aselect8_1, aselect7_1, aselect6_1, aselect5_1, aselect4_1, aselect3_1,aselect2_1, aselect
+asurround=aselect10_2, aselect9_2, aselect8_2, aselect7_2, aselect6_2, aselect5_2, aselect4_2, aselect3_2, aselect2_2, aselect1_1
+
+aselectionprop= [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+plt.plot(aselectionprop, hsurround, marker = 'o',label = "H Surround")
+plt.plot(aselectionprop, asurround, marker = 'o',label = "A Surround")
+plt.ylim(0.0,1.1)
+plt.xlim(0.0, 1.0)
+plt.xlabel('Morph Condition from A to H')
+plt.ylabel('A Selection Proportion')
+plt.title('A Response Selection Proportionality ')
+plt.legend()
+plt.show()
+
+small function that gets index as a whole and then get correct ind- should spit out correct or incorrect index, and should save outout as  a dictionary- should have trend rt and 3 keys for each block and index form there
